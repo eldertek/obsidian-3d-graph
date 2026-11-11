@@ -1,9 +1,11 @@
 {
 	"id": "3d-graph",
 	"name": "3D Graph",
-	"version": "1.0.5",
+	"version": "1.0.6",
+	"minAppVersion": "1.5.0",
 	"description": "A 3D Graph for Obsidian",
 	"author": "Alexander Weichart",
 	"authorUrl": "https://github.com/AlexW00",
+	"fundingUrl": "https://www.patreon.com/eldertek",
 	"isDesktopOnly": false
 }

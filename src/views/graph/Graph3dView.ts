@@ -50,9 +50,13 @@ export class Graph3dView extends ItemView {
 		return "3d_graph_view";
 	}
 
+	getIcon(): string {
+		return "glasses";
+	}
+
 	onResize() {
 		super.onResize();
-		this.forceGraph.updateDimensions();
+		this.forceGraph?.updateDimensions();
 	}
 
 	private appendGraph(viewContent: HTMLElement) {

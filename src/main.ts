@@ -27,6 +27,7 @@ export default class Graph3dPlugin extends Plugin {
 
 	async onload() {
 		await this.init();
+		this.registerView("3d_graph_view", (leaf) => new Graph3dView(this, leaf, false));
 		this.addRibbonIcon("glasses", "3D Graph", this.openGlobalGraph);
 		this.addCommand({
 			id: "open-3d-graph-global",
@@ -93,14 +94,18 @@ export default class Graph3dPlugin extends Plugin {
 		);
 
 		// all files are resolved, so the cache is ready:
-		this.app.metadataCache.on(
-			"resolved",
-			this.onGraphCacheReady.bind(this)
+		this.registerEvent(
+			this.app.metadataCache.on(
+				"resolved",
+				this.onGraphCacheReady.bind(this)
+			)
 		);
 		// the cache changed:
-		this.app.metadataCache.on(
-			"resolve",
-			this.onGraphCacheChanged.bind(this)
+		this.registerEvent(
+			this.app.metadataCache.on(
+				"resolve",
+				this.onGraphCacheChanged.bind(this)
+			)
 		);
 	}
 
@@ -169,6 +174,7 @@ export default class Graph3dPlugin extends Plugin {
 	// Open a global or local graph
 	private openGraph = (isLocalGraph: boolean) => {
 		const leaf = this.app.workspace.getLeaf(isLocalGraph ? "split" : false);
+		if (!leaf) return;
 		const graphView = new Graph3dView(this, leaf, isLocalGraph);
 		leaf.open(graphView);
 		if (this.cacheIsReady.value) {
@@ -196,6 +202,7 @@ export default class Graph3dPlugin extends Plugin {
 		super.onunload();
 		this.callbackUnregisterHandles.forEach((handle) => handle());
 		EventBus.off("do-reset-settings", this.onDoResetSettings);
+		this.app.workspace.detachLeavesOfType("3d_graph_view");
 	}
 
 	public getSettings(): GraphSettings {
